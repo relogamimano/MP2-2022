@@ -88,9 +88,11 @@ public class ICRogue extends AreaGame {
 
     }
 
+    // TODO: 07.12.22 green description for reset
+
     private void resetIfPressed(Button b) {
         if(b.isDown()) {
-            // TODO: 06.12.22 voir si on peut ecrire ca autrement
+//             TODO: 06.12.22 voir si on peut ecrire ca autrement
             initLevel();
 
         }

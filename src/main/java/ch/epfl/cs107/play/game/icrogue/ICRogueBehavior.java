@@ -80,9 +80,21 @@ public class ICRogueBehavior extends AreaBehavior {
         }
 
         // TODO: 05.12.22 pourquoi les fonctions ne dependent pas de leur parametre ?
+        private boolean isfree = true;
         @Override
         protected boolean canEnter(Interactable entity) {
-            return type.isWalkable;
+            if(! type.isWalkable) {
+                return false;
+            }
+            if (! entity.takeCellSpace()) {
+                return true;
+            }
+            if(isfree) {
+                isfree = false;
+                return true;
+            }
+
+            return false;
         }
 
 

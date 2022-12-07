@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.icrogue.actor;
 
 import ch.epfl.cs107.play.game.areagame.actor.MovableAreaEntity;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.actor.projectiles.FireBall;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -27,13 +28,8 @@ public class ICRoguePlayer extends ICRogueActor {
     private Sprite rightSprite;
     private Sprite upSprite;
     private Sprite leftSprite;
-
     Level0Room currentRoom;
-
     private ICRoguePlayer player;
-
-
-
     /// Animation duration in frame number
     private final static int MOVE_DURATION = 8;
 
@@ -48,6 +44,7 @@ public class ICRoguePlayer extends ICRogueActor {
         rightSprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 32, 16, 32), new Vector(.15f, -.15f));
         upSprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 64, 16, 32), new Vector(.15f, -.15f));
         leftSprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 96, 16, 32), new Vector(.15f, -.15f));
+
         resetMotion();
     }
 
@@ -79,25 +76,22 @@ public class ICRoguePlayer extends ICRogueActor {
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
-//        resetIfPressed(keyboard.get(Keyboard.R));
         // TODO: 06.12.22 pk on pne peut pas appeler get ici (static?) alors que la methode est implementée comme move if pressed
-
+//        throwFireBallIfPressed(keyboard.get(Keyboard.X));
+        if(keyboard.get(Keyboard.X).isDown()) {
+            getOwnerArea().registerActor(new FireBall(getOwnerArea(), getOrientation(),getCurrentMainCellCoordinates()));
+        }
         super.update(deltaTime);
 
 
     }
-
-    private void resetIfPressed(Button b) {
-        if(b.isDown()) {
-            // TODO: 06.12.22 voir si on peut ecrire ca autrement
-//            currentRoom = new Level0Room(new DiscreteCoordinates(0,0));
-//            DiscreteCoordinates coords = new DiscreteCoordinates(2,2);
-//            player = new ICRoguePlayer(currentRoom, Orientation.UP, coords, currentRoom.getTitle());
-//            currentRoom.registerActor(player);
-
-
-        }
-    }
+//    public void throwFireBallIfPressed( Button b) {
+//        if(keyboard.get(Keyboard.X).isDown()) {
+//            FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
+//            getOwnerArea().registerActor(fireBall);
+////            fireBall.throwFireBall(orientation);
+//        }
+//    }
 
     /**
      * Orientate and Move this player in the given orientation if the given button is down
@@ -139,17 +133,23 @@ public class ICRoguePlayer extends ICRogueActor {
         switch (getOrientation()){
             case UP:
                 upSprite.draw(canvas);
+
                 break;
             case DOWN:
                 downSprite.draw(canvas);
+
                 break;
             case RIGHT:
                 rightSprite.draw(canvas);
+
                 break;
             case LEFT:
                 leftSprite.draw(canvas);
+
                 break;
         }
+
+
         message.draw(canvas);
     }
 

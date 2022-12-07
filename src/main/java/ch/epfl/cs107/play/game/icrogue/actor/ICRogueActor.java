@@ -22,4 +22,8 @@ abstract public class ICRogueActor extends MovableAreaEntity {
         super(area, orientation, position);
     }
 
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+    }
 }
