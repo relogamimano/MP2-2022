@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.icrogue.actor.projectiles;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
+import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
@@ -14,7 +15,7 @@ import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.List;
 
-public class FireBall extends Projectile implements Consumable, Interactable {
+public class FireBall extends Projectile implements Consumable {
 
     final int DEFAULT_MOVE_DURATION = 10;
 
@@ -67,5 +68,10 @@ public class FireBall extends Projectile implements Consumable, Interactable {
     public void consume() {
         super.consume();
         isConsumed = true;
+    }
+
+    @Override
+    public void interactWith(Interactable other, boolean isCellInteraction) {
+
     }
 }

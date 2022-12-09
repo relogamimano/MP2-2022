@@ -18,4 +18,15 @@ public class Cherry extends Item {
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICRogueInteractionHandler) v).interactWith(this, isCellInteraction);
     }
+    @Override
+    public boolean takeCellSpace() {
+        //traversable
+        return false;
+    }
+    @Override
+    public boolean isCellInteractable() {
+        return true;
+    }
+
+
 }

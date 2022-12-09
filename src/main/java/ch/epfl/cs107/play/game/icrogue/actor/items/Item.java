@@ -20,10 +20,6 @@ abstract public class Item extends CollectableAreaEntity implements Interactable
 
     }
     public void setSprite(Sprite sprite) {this.sprite = sprite;}
-    @Override
-    public boolean isCollected() {
-        return super.isCollected();
-    }
 
     @Override
     public void draw(Canvas canvas) {
@@ -37,11 +33,12 @@ abstract public class Item extends CollectableAreaEntity implements Interactable
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
-    @Override
-    public boolean takeCellSpace() {
-        //traversable
-        return false;
-    }
+//    @Override
+//    public boolean takeCellSpace() {
+//        //traversable
+//        return false;
+//    }
+
 
     @Override
     public boolean isCellInteractable() {

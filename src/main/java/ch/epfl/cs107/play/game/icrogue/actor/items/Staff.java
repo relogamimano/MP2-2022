@@ -19,4 +19,17 @@ public class Staff extends Item implements Interactable {
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICRogueInteractionHandler) v).interactWith(this, isCellInteraction);
     }
+
+    @Override
+    public boolean takeCellSpace() {
+        //traversable
+        return true;
+    }
+
+
+
+    @Override
+    public boolean isViewInteractable() {
+        return true;
+    }
 }

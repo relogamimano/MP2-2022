@@ -1,7 +1,9 @@
 package ch.epfl.cs107.play.game.icrogue.actor;
 
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
+import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.FireBall;
@@ -21,13 +23,12 @@ import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import java.util.Collections;
 import java.util.List;
 
-public class ICRoguePlayer extends ICRogueActor implements Interactable {
-    private float hp;
+public class ICRoguePlayer extends ICRogueActor implements Interactor {
     private TextGraphics message;
-    private Sprite downSprite;
-    private Sprite rightSprite;
-    private Sprite upSprite;
-    private Sprite leftSprite;
+    private final Sprite downSprite;
+    private final Sprite rightSprite;
+    private final Sprite upSprite;
+    private final Sprite leftSprite;
     Level0Room currentRoom;
     private ICRoguePlayer player;
     /// Animation duration in frame number
@@ -136,12 +137,12 @@ public class ICRoguePlayer extends ICRogueActor implements Interactable {
         return true;
     }
 
-    public boolean wantsViewInteraction(Button b) {
-        if(b.isDown()) {
-            return true;
-        }
-        return false;
+    @Override
+    public boolean wantsViewInteraction() {
+        // TODO: 09.12.22 is there a better way to access the W key ?
+        return getOwnerArea().getKeyboard().get(Keyboard.W).isDown();
     }
+
 
 
     @Override
@@ -160,7 +161,6 @@ public class ICRoguePlayer extends ICRogueActor implements Interactable {
     }
 
     public void interactWith(Interactable other,boolean isCellInteraction) {
-
         other.acceptInteraction(icRogueInteractionHandler, isCellInteraction);
     }
 
@@ -168,13 +168,22 @@ public class ICRoguePlayer extends ICRogueActor implements Interactable {
 
         @Override
         public void interactWith(Cherry other, boolean isCellInteraction) {
-            if(isCellInteraction) {
-                other.collect();
-            }
+            other.collect();
+
+        }
+        @Override
+        public void interactWith(Staff other, boolean isCellInteraction) {
+            other.collect();
+
         }
 
         @Override
-        public void interactWith(Staff other, boolean isCellInteraction) {
+        public void interactWith(ICRogueBehavior.ICRogueCell other, boolean isCellInteraction) {
+            ICRogueInteractionHandler.super.interactWith(other, isCellInteraction);
+        }
+
+        @Override
+        public void interactWith(ICRoguePlayer other, boolean isCellInteraction) {
             ICRogueInteractionHandler.super.interactWith(other, isCellInteraction);
         }
     }
