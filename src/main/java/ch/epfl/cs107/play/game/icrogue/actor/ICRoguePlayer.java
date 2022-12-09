@@ -1,8 +1,11 @@
 package ch.epfl.cs107.play.game.icrogue.actor;
 
-import ch.epfl.cs107.play.game.areagame.actor.MovableAreaEntity;
+import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
+import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.FireBall;
+import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -13,15 +16,12 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Button;
-import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
-import ch.epfl.cs107.play.game.icrogue.ICRogue;
-
-import java.awt.*;
+import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import java.util.Collections;
 import java.util.List;
 
-public class ICRoguePlayer extends ICRogueActor {
+public class ICRoguePlayer extends ICRogueActor implements Interactable {
     private float hp;
     private TextGraphics message;
     private Sprite downSprite;
@@ -32,6 +32,8 @@ public class ICRoguePlayer extends ICRogueActor {
     private ICRoguePlayer player;
     /// Animation duration in frame number
     private final static int MOVE_DURATION = 8;
+    ICRogueInteractionHandler icRogueInteractionHandler = new ICRoguePlayerInteractionHandler();
+
 
     public ICRoguePlayer(Area owner, Orientation orientation, DiscreteCoordinates coordinates, String spriteName) {
         super(owner, orientation, coordinates);
@@ -44,17 +46,7 @@ public class ICRoguePlayer extends ICRogueActor {
         resetMotion();
     }
 
-    /**
-     * Center the camera on the player
-     */
 
-    // TODO: 06.12.22 boule de feu 
-//    BOULE DE FEU  :
-    private void bouleDeFeu() {
-//        lancerBouleDeFeuIfPressed(keyboard.get(Keyboard.X));
-//        la boule va dans la meme direction
-        
-    }
 
     @Override
     public void update(float deltaTime) {
@@ -64,25 +56,20 @@ public class ICRoguePlayer extends ICRogueActor {
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
-        // TODO: 06.12.22 pk on pne peut pas appeler get ici (static?) alors que la methode est implementée comme move if pressed
 //        throwFireBallIfPressed(keyboard.get(Keyboard.X));
         if(keyboard.get(Keyboard.X).isDown()) {
             FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
+            // TODO: 09.12.22 enterArea douteux
             fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
 //            fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
 //            getOwnerArea().registerActor(fireBall);
         }
+//        wantsViewInteraction(keyboard.get(Keyboard.W));
         super.update(deltaTime);
 
 
     }
-//    public void throwFireBallIfPressed( Button b) {
-//        if(b.isDown()) {
-//            FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
-//            getOwnerArea().registerActor(fireBall);
-////            fireBall.throwFireBall(orientation);
-//        }
-//    }
+
 
     /**
      * Orientate and Move this player in the given orientation if the given button is down
@@ -124,47 +111,71 @@ public class ICRoguePlayer extends ICRogueActor {
         switch (getOrientation()){
             case UP:
                 upSprite.draw(canvas);
-
                 break;
             case DOWN:
                 downSprite.draw(canvas);
-
                 break;
             case RIGHT:
                 rightSprite.draw(canvas);
-
                 break;
             case LEFT:
                 leftSprite.draw(canvas);
-
                 break;
         }
-
-
     }
-
-
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return Collections.singletonList (getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+    }
+    public boolean wantsCellInteraction() {
+        return true;
+    }
+
+    public boolean wantsViewInteraction(Button b) {
+        if(b.isDown()) {
+            return true;
+        }
+        return false;
+    }
+
+
     @Override
     public boolean takeCellSpace() {return true;} // non traversable
-
     @Override
     public boolean isCellInteractable() {
         return true;
     }
-
     @Override
     public boolean isViewInteractable() {
         return true;
     }
-
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+        ((ICRogueInteractionHandler) v).interactWith(this, isCellInteraction);
+    }
 
+    public void interactWith(Interactable other,boolean isCellInteraction) {
+
+        other.acceptInteraction(icRogueInteractionHandler, isCellInteraction);
+    }
+
+    private class ICRoguePlayerInteractionHandler implements ICRogueInteractionHandler {
+
+        @Override
+        public void interactWith(Cherry other, boolean isCellInteraction) {
+            if(isCellInteraction) {
+                other.collect();
+            }
+        }
+
+        @Override
+        public void interactWith(Staff other, boolean isCellInteraction) {
+            ICRogueInteractionHandler.super.interactWith(other, isCellInteraction);
+        }
     }
 }
