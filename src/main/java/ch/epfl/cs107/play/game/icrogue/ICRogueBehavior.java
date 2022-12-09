@@ -86,15 +86,15 @@ public class ICRogueBehavior extends AreaBehavior {
             if(! type.isWalkable) {
                 return false;
             }
-            if (! entity.takeCellSpace()) {
+            if ( !entity.takeCellSpace()) {
                 return true;
             }
             if(isfree) {
                 isfree = false;
                 return true;
             }
-
-            return false;
+//
+           return true;
         }
 
 

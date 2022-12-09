@@ -14,7 +14,8 @@ public abstract class Projectile extends ICRogueActor {
 
     private int nbFrames;
 
-    private Sprite fireBallSprite;
+    private Sprite sprite;
+
     /**
      * Default MovableAreaEntity constructor
      *
@@ -25,25 +26,35 @@ public abstract class Projectile extends ICRogueActor {
     public Projectile(Area area, Orientation orientation, DiscreteCoordinates position, int nbFrames) {
         super(area, orientation, position);
         this.nbFrames = nbFrames;
+        resetMotion();
+
+    }
+
+    public void consume() {
 
     }
     @Override
     public void draw(Canvas canvas) {
-        fireBallSprite.draw(canvas);
+        sprite.draw(canvas);
     }
     @Override
     public boolean takeCellSpace() {
         return false;
     }
 
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
+    }
+
     // ajout douteux
 
-    
+    public void setSprite(Sprite sprite) {this.sprite = sprite;}
 
     @Override
     public void update(float deltaTime) {
-
-        super.update(deltaTime);
         move(nbFrames);
+        super.update(deltaTime);
+
     }
 }

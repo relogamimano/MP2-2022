@@ -37,17 +37,12 @@ public class ICRogue extends AreaGame {
         setCurrentArea();
         currentRoom.registerActor(player);
 
-
-//        faire rentrer currentRoom ou icRoguePlayer dans currentArea
-//        player.enterArea(currentArea, coords);
-//        player.centerCamera();
     }
 
     protected void reset(){
 
     }
 
-    // TODO: 03.12.22 Should i create a methode just to do one thing in the constructor ? Well Declared ?
     @Override
     protected Area setCurrentArea() {
         currentArea = currentRoom;
@@ -88,11 +83,11 @@ public class ICRogue extends AreaGame {
 
     }
 
-    // TODO: 07.12.22 green description for reset
+
+
 
     private void resetIfPressed(Button b) {
         if(b.isDown()) {
-//             TODO: 06.12.22 voir si on peut ecrire ca autrement
             initLevel();
 
         }

@@ -26,4 +26,11 @@ abstract public class ICRogueActor extends MovableAreaEntity {
     public void update(float deltaTime) {
         super.update(deltaTime);
     }
+
+    public void enterArea(Area area, DiscreteCoordinates position) {
+        area.registerActor(this);
+        setOwnerArea(area);
+        setCurrentPosition(position.toVector());
+        resetMotion();
+    }
 }

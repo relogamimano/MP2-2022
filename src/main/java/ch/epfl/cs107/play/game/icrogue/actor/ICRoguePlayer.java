@@ -35,11 +35,7 @@ public class ICRoguePlayer extends ICRogueActor {
 
     public ICRoguePlayer(Area owner, Orientation orientation, DiscreteCoordinates coordinates, String spriteName) {
         super(owner, orientation, coordinates);
-        this.hp = 10;
-        message = new TextGraphics(Integer.toString((int)hp), 0.4f, Color.BLUE);
-        message.setParent(this);
-        message.setAnchor(new Vector(-0.3f, 0.1f));
-        // TODO: 06.12.22 for loop instead of repeating initilalization of sprite
+
         downSprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 0, 16, 32), new Vector(.15f, -.15f));
         rightSprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 32, 16, 32), new Vector(.15f, -.15f));
         upSprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 64, 16, 32), new Vector(.15f, -.15f));
@@ -51,9 +47,6 @@ public class ICRoguePlayer extends ICRogueActor {
     /**
      * Center the camera on the player
      */
-    public void centerCamera() {
-        getOwnerArea().setViewCandidate(this);
-    }
 
     // TODO: 06.12.22 boule de feu 
 //    BOULE DE FEU  :
@@ -65,11 +58,6 @@ public class ICRoguePlayer extends ICRogueActor {
 
     @Override
     public void update(float deltaTime) {
-        if (hp > 0) {
-            hp -=deltaTime;
-            message.setText(Integer.toString((int)hp));
-        }
-        if (hp < 0) hp = 0.f;
         Keyboard keyboard= getOwnerArea().getKeyboard();
 
         moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
@@ -79,14 +67,17 @@ public class ICRoguePlayer extends ICRogueActor {
         // TODO: 06.12.22 pk on pne peut pas appeler get ici (static?) alors que la methode est implementée comme move if pressed
 //        throwFireBallIfPressed(keyboard.get(Keyboard.X));
         if(keyboard.get(Keyboard.X).isDown()) {
-            getOwnerArea().registerActor(new FireBall(getOwnerArea(), getOrientation(),getCurrentMainCellCoordinates()));
+            FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
+            fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
+//            fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
+//            getOwnerArea().registerActor(fireBall);
         }
         super.update(deltaTime);
 
 
     }
 //    public void throwFireBallIfPressed( Button b) {
-//        if(keyboard.get(Keyboard.X).isDown()) {
+//        if(b.isDown()) {
 //            FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
 //            getOwnerArea().registerActor(fireBall);
 ////            fireBall.throwFireBall(orientation);
@@ -150,16 +141,9 @@ public class ICRoguePlayer extends ICRogueActor {
         }
 
 
-        message.draw(canvas);
     }
 
-    public boolean isWeak() {
-        return (hp <= 0.f);
-    }
 
-    public void strengthen() {
-        hp = 10;
-    }
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
@@ -167,9 +151,7 @@ public class ICRoguePlayer extends ICRogueActor {
     }
 
     @Override
-    public boolean takeCellSpace() {
-        return true;
-    }
+    public boolean takeCellSpace() {return true;} // non traversable
 
     @Override
     public boolean isCellInteractable() {
