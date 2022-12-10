@@ -68,6 +68,13 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
             FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
             fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
         }
+        if(keyboard.get(Keyboard.O).isDown()) {
+
+        }
+
+        if(keyboard.get(Keyboard.O).isDown()) {
+
+        }
 
         super.update(deltaTime);
     }

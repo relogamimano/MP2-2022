@@ -39,6 +39,7 @@ public class ICRogue extends AreaGame {
         setCurrentArea();
         currentRoom.registerActor(player);
 
+
     }
 
 

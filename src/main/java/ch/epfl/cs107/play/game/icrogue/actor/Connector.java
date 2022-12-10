@@ -13,10 +13,10 @@ import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.List;
 
-public abstract class Connector extends ICRogueActor implements Interactable {
+public class Connector extends ICRogueActor implements Interactable {
     private Sprite sprite;
-    private String directionArea;
-    private DiscreteCoordinates directionCoordinates;
+//    private String directionArea;
+//    private DiscreteCoordinates directionCoordinates;
     final private int NO_KEY_ID = 22;
     private State state;
     public enum State {
@@ -48,8 +48,10 @@ public abstract class Connector extends ICRogueActor implements Interactable {
                 this.sprite = new Sprite("icrogue/door_"+orientation.ordinal(), (orientation.ordinal()+1)%2+1, orientation.ordinal()%2+1, this);
                 break;
             default:
+                // TODO: 10.12.22 je peux laisser null ? 
                 this.sprite = null;
         }
+
     }
 
 
@@ -58,6 +60,9 @@ public abstract class Connector extends ICRogueActor implements Interactable {
     @Override
     public void draw(Canvas canvas) {
 
+        if(state != State.OPEN) {
+            sprite.draw(canvas);
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package ch.epfl.cs107.play.game.icrogue.area.level0.rooms;
 
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Item;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
@@ -80,6 +81,10 @@ public class Level0Room extends ICRogueRoom {
         registerActor(staff);
         registerActor(cherry);
         registerActor(key);
+        for (Connector connector: connectors) {
+            registerActor(connector);
+        }
+
     }
 
     @Override
