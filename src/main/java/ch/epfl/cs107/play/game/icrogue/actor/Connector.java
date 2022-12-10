@@ -49,10 +49,9 @@ public abstract class Connector extends ICRogueActor implements Interactable {
                 break;
             default:
                 this.sprite = null;
-
         }
-
     }
+
 
 
 
@@ -66,6 +65,7 @@ public abstract class Connector extends ICRogueActor implements Interactable {
         DiscreteCoordinates coord = getCurrentMainCellCoordinates();
         return List.of(coord, coord.jump(new Vector((getOrientation().ordinal()+1)%2, getOrientation().ordinal()%2)));
     }
+
 
     @Override
     public boolean takeCellSpace() {
