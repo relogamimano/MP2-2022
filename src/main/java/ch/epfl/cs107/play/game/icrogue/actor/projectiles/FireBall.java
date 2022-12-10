@@ -6,6 +6,9 @@ import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior.ICRogueCellType;
+import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
+import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -25,6 +28,8 @@ public class FireBall extends Projectile implements Consumable {
     Sprite fireBallSprite;
 
     final static int NB_FRAMES = 5;
+
+    FireBallInteractionHandler fireBallInteractionHandler = new FireBallInteractionHandler();
     /**
      * Default MovableAreaEntity constructor
      *
@@ -38,7 +43,11 @@ public class FireBall extends Projectile implements Consumable {
         setSprite(new Sprite("zelda/fire", 1f, 1f, this, new RegionOfInterest(0, 0, 16, 16), new Vector(0, 0)));
     }
 
+    @Override
+    public void update(float deltaTime) {
 
+        super.update(deltaTime);
+    }
 
     public boolean takeCellSpace() {
         return false;
@@ -46,12 +55,12 @@ public class FireBall extends Projectile implements Consumable {
 
     @Override
     public boolean isCellInteractable() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isViewInteractable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -61,17 +70,25 @@ public class FireBall extends Projectile implements Consumable {
 
     @Override
     public boolean isConsumed() {
-        return false;
+        return isConsumed;
     }
 
     @Override
     public void consume() {
-        super.consume();
-        isConsumed = true;
+        getOwnerArea().unregisterActor(this);
+
     }
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
-
+        other.acceptInteraction(fireBallInteractionHandler, isCellInteraction);
+    }
+    private class FireBallInteractionHandler implements ICRogueInteractionHandler {
+        @Override
+        public void interactWith(ICRogueBehavior.ICRogueCell other, boolean isCellInteraction) {
+            if (other.getCellType() == ICRogueCellType.WALL || other.getCellType() == ICRogueCellType.HOLE && !isConsumed) {
+                consume();
+            }
+        }
     }
 }

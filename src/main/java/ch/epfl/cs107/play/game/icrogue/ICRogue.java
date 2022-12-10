@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
+import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room.Level0Connectors;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Or;
@@ -12,6 +13,7 @@ import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
+
 
 public class ICRogue extends AreaGame {
 
@@ -24,8 +26,8 @@ public class ICRogue extends AreaGame {
      * Add all the areas
      */
     // TODO: 03.12.22 check if currentRoom and currentArea is well declared ?
-    Level0Room currentRoom;
-    Area currentArea;
+    private Level0Room currentRoom;
+    private Area currentArea;
 
     private void initLevel(){
         // TODO: 02.12.22 Verifer initLevel()
@@ -39,6 +41,7 @@ public class ICRogue extends AreaGame {
 
     }
 
+
     protected void reset(){
 
     }
@@ -48,6 +51,11 @@ public class ICRogue extends AreaGame {
         currentArea = currentRoom;
         return currentArea;
     }
+
+//    public Area getCurrentArea() {
+//        currentArea = currentRoom;
+//        return currentArea;
+//    }
 
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {

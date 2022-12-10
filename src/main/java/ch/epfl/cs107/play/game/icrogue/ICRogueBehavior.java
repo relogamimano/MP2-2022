@@ -69,6 +69,10 @@ public class ICRogueBehavior extends AreaBehavior {
             this.type = type;
         }
 
+        public ICRogueCellType getCellType() {
+            return type;
+        }
+
         // TODO: 05.12.22 est ce quon fait ca bien ?
         @Override
         public boolean takeCellSpace() {
@@ -87,7 +91,6 @@ public class ICRogueBehavior extends AreaBehavior {
             if(! type.isWalkable) {
                 return false;
             }
-
             if(entity.takeCellSpace()) {
                 for (Interactable e: entities) {
                     if(e.takeCellSpace()) {
@@ -95,9 +98,6 @@ public class ICRogueBehavior extends AreaBehavior {
                     }
                 }
             }
-
-
-
             return true;
         }
 

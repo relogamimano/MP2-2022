@@ -98,7 +98,6 @@ abstract public class AreaGame implements Game, PauseMenu.Pausable {
 
     /// AreaGame implements Playable
 
-    // TODO: 03.12.22 Should i create a methode just to do one thing in the constructor ? Well Declared ?
     protected abstract Area setCurrentArea();
 
     @Override

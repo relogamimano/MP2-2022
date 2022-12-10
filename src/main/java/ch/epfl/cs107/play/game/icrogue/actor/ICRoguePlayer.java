@@ -5,7 +5,9 @@ import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
+import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
+import ch.epfl.cs107.play.game.icrogue.actor.items.Item;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.FireBall;
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
@@ -16,10 +18,12 @@ import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.icrogue.ICRogue;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
+import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +33,9 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     private final Sprite rightSprite;
     private final Sprite upSprite;
     private final Sprite leftSprite;
-    Level0Room currentRoom;
+
+    private boolean staffCollect = false;
+//    Level0Room currentRoom;
     private ICRoguePlayer player;
     /// Animation duration in frame number
     private final static int MOVE_DURATION = 8;
@@ -57,18 +63,13 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
-//        throwFireBallIfPressed(keyboard.get(Keyboard.X));
-        if(keyboard.get(Keyboard.X).isDown()) {
+        // TODO: 09.12.22 whould i create a methode throwFireBallIfPressed ? 
+        if(keyboard.get(Keyboard.X).isDown() && staffCollect) {
             FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
-            // TODO: 09.12.22 enterArea douteux
             fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
-//            fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
-//            getOwnerArea().registerActor(fireBall);
         }
-//        wantsViewInteraction(keyboard.get(Keyboard.W));
+
         super.update(deltaTime);
-
-
     }
 
 
@@ -174,7 +175,12 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         @Override
         public void interactWith(Staff other, boolean isCellInteraction) {
             other.collect();
+            staffCollect = true;
 
+        }
+        @Override
+        public void interactWith(Key other, boolean isCellInteraction) {
+            other.collect();
         }
 
         @Override

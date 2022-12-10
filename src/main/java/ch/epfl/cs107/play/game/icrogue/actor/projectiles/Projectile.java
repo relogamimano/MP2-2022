@@ -41,9 +41,7 @@ public abstract class Projectile extends ICRogueActor implements Interactor {
         return true;
     }
 
-    public void consume() {
 
-    }
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);
@@ -73,4 +71,5 @@ public abstract class Projectile extends ICRogueActor implements Interactor {
         super.update(deltaTime);
 
     }
+
 }
