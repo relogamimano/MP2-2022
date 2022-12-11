@@ -7,10 +7,8 @@ import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
-import ch.epfl.cs107.play.game.icrogue.actor.items.Item;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.FireBall;
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
@@ -18,14 +16,15 @@ import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
-import ch.epfl.cs107.play.game.icrogue.ICRogue;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
+
 import java.util.Collections;
 import java.util.List;
+
+import static ch.epfl.cs107.play.game.icrogue.actor.Connector.State.OPEN;
 
 public class ICRoguePlayer extends ICRogueActor implements Interactor {
     private TextGraphics message;
@@ -33,12 +32,13 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     private final Sprite rightSprite;
     private final Sprite upSprite;
     private final Sprite leftSprite;
-
-    private boolean staffCollect = false;
+    private boolean isStaffCollected = false;
+    private boolean isKeyCollected = false;
+    // TODO: 11.12.22 should isInContactInteractio be a method or a variable ?
 //    Level0Room currentRoom;
     private ICRoguePlayer player;
     /// Animation duration in frame number
-    private final static int MOVE_DURATION = 8;
+    private final static int MOVE_DURATION = 4;
     ICRogueInteractionHandler icRogueInteractionHandler = new ICRoguePlayerInteractionHandler();
 
 
@@ -64,19 +64,20 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
         // TODO: 09.12.22 whould i create a methode throwFireBallIfPressed ? 
-        if(keyboard.get(Keyboard.X).isDown() && staffCollect) {
+        if(keyboard.get(Keyboard.X).isDown() && isStaffCollected) {
             FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
             fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
         }
-        if(keyboard.get(Keyboard.O).isDown()) {
+//        if(&& !isDisplacementOccurs()) {
+//            switchArea();
+//        }
 
-        }
-
-        if(keyboard.get(Keyboard.O).isDown()) {
-
-        }
 
         super.update(deltaTime);
+    }
+
+    public boolean isInContactInteractionWithConnector(Interactable interactable) {
+        return this.getCurrentCells() == interactable.getCurrentCells() && interactable.isCellInteractable();
     }
 
 
@@ -133,6 +134,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         }
     }
 
+
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
@@ -175,6 +177,14 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     private class ICRoguePlayerInteractionHandler implements ICRogueInteractionHandler {
 
         @Override
+        public void interactWith(Connector other, boolean isCellInteraction) {
+            if (isKeyCollected) {
+                other.setState(OPEN);
+            }
+            
+        }
+
+        @Override
         public void interactWith(Cherry other, boolean isCellInteraction) {
             other.collect();
 
@@ -182,12 +192,13 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         @Override
         public void interactWith(Staff other, boolean isCellInteraction) {
             other.collect();
-            staffCollect = true;
+            isStaffCollected = true;
 
         }
         @Override
         public void interactWith(Key other, boolean isCellInteraction) {
             other.collect();
+            isKeyCollected = true;
         }
 
         @Override

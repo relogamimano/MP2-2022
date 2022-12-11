@@ -16,7 +16,6 @@ import ch.epfl.cs107.play.signal.logic.Or;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: 03.12.22 what are good practice of access modifier with classes ? 
 public class Level0Room extends ICRogueRoom {
     private Item staff;
     private Item cherry;
@@ -64,11 +63,12 @@ public class Level0Room extends ICRogueRoom {
     }
     public Level0Room(DiscreteCoordinates roomCoordinates) {
         // TODO: 02.12.22 Should i add a constant behaviorName ?
+        // private String behaviorName = "icroque/Level0Room"
 
         super(Level0Connectors.getAllConnectorsPosition(), Level0Connectors.getAllConnectorsOrientation(),"icrogue/Level0Room", roomCoordinates);
-        key = new Key(this, Orientation.DOWN, new DiscreteCoordinates(4, 6), 22);
-        staff = new Staff(this, Orientation.DOWN, new DiscreteCoordinates(4, 3));
-        cherry = new Cherry(this, Orientation.DOWN, new DiscreteCoordinates(6, 3));
+        key = new Key(this, new DiscreteCoordinates(4, 6), 22);
+        staff = new Staff(this, new DiscreteCoordinates(4, 3));
+        cherry = new Cherry(this, new DiscreteCoordinates(6, 3));
 
     }
 
@@ -76,7 +76,6 @@ public class Level0Room extends ICRogueRoom {
     @Override
     protected void createArea() {
         // Base
-        // TODO: 05.12.22 c'est pourquoi faire le getter ?
         registerActor(new Background(this, behaviorName));
         registerActor(staff);
         registerActor(cherry);

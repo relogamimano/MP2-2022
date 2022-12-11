@@ -73,7 +73,6 @@ public class ICRogueBehavior extends AreaBehavior {
             return type;
         }
 
-        // TODO: 05.12.22 est ce quon fait ca bien ?
         @Override
         public boolean takeCellSpace() {
             return false;
@@ -84,7 +83,7 @@ public class ICRogueBehavior extends AreaBehavior {
             return true;
         }
 
-        // TODO: 05.12.22 pourquoi les fonctions ne dependent pas de leur parametre ?
+        // TODO: 05.12.22 pourquoi les fonctions ne dependent pas de leur parametre et pourquoi utiliser des fonctions pour renvoyer une valeur constante?
         private boolean isfree = true;
         @Override
         protected boolean canEnter(Interactable entity) {

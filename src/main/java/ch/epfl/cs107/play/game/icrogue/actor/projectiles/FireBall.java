@@ -38,7 +38,6 @@ public class FireBall extends Projectile implements Consumable {
      * @param position    (Coordinate): Initial position of the entity. Not null
      */
     public FireBall(Area area, Orientation orientation, DiscreteCoordinates position) {
-        // TODO: 09.12.22 magic number 5 
         super(area, orientation, position, NB_FRAMES);
         setSprite(new Sprite("zelda/fire", 1f, 1f, this, new RegionOfInterest(0, 0, 16, 16), new Vector(0, 0)));
     }

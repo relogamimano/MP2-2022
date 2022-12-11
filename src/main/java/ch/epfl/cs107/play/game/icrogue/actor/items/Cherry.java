@@ -6,12 +6,13 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.Or;
 
 public class Cherry extends Item {
 
-    public Cherry(Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(area, orientation, position);
-        setSprite(new Sprite("icrogue/lana", 0.6f, 0.6f, this));
+    public Cherry(Area area, DiscreteCoordinates position) {
+        super(area, Orientation.DOWN, position);
+        setSprite(new Sprite("icrogue/cherry", 0.6f, 0.6f, this));
     }
 
     @Override

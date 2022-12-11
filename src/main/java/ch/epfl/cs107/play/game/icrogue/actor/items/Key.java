@@ -9,8 +9,8 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class Key extends Item  {
     final private int ID;
-    public Key(Area area, Orientation orientation, DiscreteCoordinates position, int ID) {
-        super(area, orientation, position);
+    public Key(Area area, DiscreteCoordinates position, int ID) {
+        super(area, Orientation.DOWN, position);
         this.ID = ID;
         setSprite(new Sprite("icrogue/key", 0.6f, 0.6f, this));
     }

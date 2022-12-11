@@ -10,8 +10,8 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class Staff extends Item implements Interactable {
 
-    public Staff(Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(area, orientation, position);
+    public Staff(Area area, DiscreteCoordinates position) {
+        super(area, Orientation.DOWN, position);
         setSprite(new Sprite("zelda/staff_water.icon", 0.6f, 0.6f, this));
 
     }
