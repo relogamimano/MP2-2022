@@ -30,8 +30,6 @@ public abstract class ICRogueRoom extends Area {
 
     private List<DiscreteCoordinates> directionRoomCoordinates;// douteux
 
-    //================= Constructeur =================//
-
     public ICRogueRoom(List<DiscreteCoordinates> connectorsCoordinates, List<Orientation> orientations,
                 String behaviorName, DiscreteCoordinates roomCoordinates){
         // TODO: 10.12.22 intialization douteuse 
@@ -51,6 +49,13 @@ public abstract class ICRogueRoom extends Area {
     // TODO: 10.12.22 createArea() abstract ? Should we intialize connecotrs in ICRogueRooom or in Level0ROom ?
     protected abstract void createArea();
 
+    public List<Connector> getConnectors(){
+        return connectors;
+    }
+
+
+
+
     @Override
     public void update(float deltaTime) {
         Keyboard keyboard = this.getKeyboard();
@@ -64,23 +69,16 @@ public abstract class ICRogueRoom extends Area {
             System.out.println("adlajdadf");
         }
         if(keyboard.get(Keyboard.T).isDown()) {
-            // TODO: 11.12.22 Ternary operator ? 
-//            connectors.get(WEST_CONNECTOR_NB).state = (connectors.get(WEST_CONNECTOR_NB).state != null) ?  State.LOCKED : null;
             for (Connector connector: connectors) {
                 if (connector.getState() == State.CLOSED) {
                     connector.setState(State.OPEN);
                 } else if(connector.getState() == State.OPEN) {
                     connector.setState(State.CLOSED);
                 }
-
             }
-
         }
-
         super.update(deltaTime);
     }
-
-
 
     @Override
     public String getTitle() {

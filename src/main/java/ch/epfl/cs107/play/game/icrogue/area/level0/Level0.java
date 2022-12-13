@@ -7,8 +7,8 @@ import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0StaffRoom;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class Level0 extends Level {
-    private int PART_1_KEY_ID = 00;
-    private int BOSS_KEY_ID = 01;
+    private int PART_1_KEY_ID = 22;
+    private int BOSS_KEY_ID = 23;
 
     public Level0(int width, int height, DiscreteCoordinates spawnPosition) {
         super(width, height, spawnPosition);
@@ -16,8 +16,8 @@ public class Level0 extends Level {
     }
 
     public void generateFixedMap() {
-        generateMap1();
-//        generateMap2();
+//        generateMap1();
+        generateMap2();
     }
     private void generateMap1() {
         DiscreteCoordinates room00 = new DiscreteCoordinates(0, 0);

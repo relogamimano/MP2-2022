@@ -31,7 +31,7 @@ public class Level0Room extends ICRogueRoom {
         private final DiscreteCoordinates destination;
         private final Orientation orientation;
 
-        static List<Orientation> getAllConnectorsOrientation() {
+        public static List<Orientation> getAllConnectorsOrientation() {
             List<Orientation>  allConnectorsOrientation = new ArrayList<>();
             for (Level0Connectors level0Connectors : Level0Connectors.values()) {
                 allConnectorsOrientation.add(level0Connectors.orientation);

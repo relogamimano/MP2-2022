@@ -73,6 +73,12 @@ public class Connector extends ICRogueActor implements Interactable {
     }
 
 
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public String getDestination() {return destination;}
+
     @Override
     public void draw(Canvas canvas) {
         if(state != State.OPEN && sprite != null) {

@@ -4,9 +4,11 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.icrogue.ICRogue;
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
+import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 import java.util.ArrayList;
+
 
 public class Level {
     private ICRogueRoom[][] map;
@@ -21,9 +23,13 @@ public class Level {
 //        generateFixedMap();
     }
 
+    public DiscreteCoordinates getSpawnCoordinates() {
+        return spawnCoordinates;
+    }
+
+
     // Selon les instructions de la prof :
     //une fonction qui ajoute les aires au jeu
-
     public void addRooms(AreaGame areaGame) {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
@@ -42,6 +48,11 @@ public class Level {
         return map[coords.x][coords.y];
     }
 
+    public ICRogueRoom[][] getRooms() {
+        return map;
+    }
+
+
 
     protected void setRoom(DiscreteCoordinates coords, ICRogueRoom room) {
         map[coords.x][coords.y] = room;
@@ -51,10 +62,12 @@ public class Level {
     }
     protected void setRoomConnector(DiscreteCoordinates coords, String destination, ConnectorInRoom connector) {
         map[coords.x][coords.y].connectors.get(connector.getIndex()).destination = destination;
-        map[coords.x][coords.y].connectors.get(connector.getIndex()).setState(Connector.State.OPEN);
+        map[coords.x][coords.y].connectors.get(connector.getIndex()).setState(Connector.State.CLOSED);
     }
     protected void lockRoomConnector(DiscreteCoordinates coords, ConnectorInRoom connector, int keyId) {
         map[coords.x][coords.y].connectors.get(connector.getIndex()).KeyID = keyId;
+        map[coords.x][coords.y].connectors.get(connector.getIndex()).setState(Connector.State.LOCKED);
+
     }
     protected void setCoordinatesToStarterRoomTitle(DiscreteCoordinates coordinates) {
         startingRoomTitle = "icrogue/level0" + coordinates.x + coordinates.y;

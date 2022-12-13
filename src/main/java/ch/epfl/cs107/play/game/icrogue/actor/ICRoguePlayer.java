@@ -23,17 +23,22 @@ import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
-import static ch.epfl.cs107.play.game.icrogue.actor.Connector.State.OPEN;
+import static ch.epfl.cs107.play.game.icrogue.actor.Connector.State.*;
 
 public class ICRoguePlayer extends ICRogueActor implements Interactor {
-    private TextGraphics message;
     private final Sprite downSprite;
     private final Sprite rightSprite;
     private final Sprite upSprite;
     private final Sprite leftSprite;
     private boolean isStaffCollected = false;
     private boolean isKeyCollected = false;
+
+    private Connector interactionConnector;
+
+    private boolean interactionWithConnector = false;
+
     // TODO: 11.12.22 should isInContactInteractio be a method or a variable ?
 //    Level0Room currentRoom;
     private ICRoguePlayer player;
@@ -68,18 +73,19 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
             FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
             fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
         }
-//        if(&& !isDisplacementOccurs()) {
-//            switchArea();
-//        }
 
 
         super.update(deltaTime);
     }
 
-    public boolean isInContactInteractionWithConnector(Interactable interactable) {
-        return this.getCurrentCells() == interactable.getCurrentCells() && interactable.isCellInteractable();
+
+    public Connector getInteractionConnector() {
+        return interactionConnector;
     }
 
+    public boolean isInInteractionWithConnector() {
+        return interactionWithConnector && !isDisplacementOccurs();
+    }
 
     /**
      * Orientate and Move this player in the given orientation if the given button is down
@@ -109,10 +115,10 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
      */
     public void enterArea(Area area, DiscreteCoordinates position){
         area.registerActor(this);
-        area.setViewCandidate(this);
         setOwnerArea(area);
         setCurrentPosition(position.toVector());
         resetMotion();
+        interactionWithConnector = false;
     }
 
     @Override
@@ -155,6 +161,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
 
 
+
     @Override
     public boolean takeCellSpace() {return true;} // non traversable
     @Override
@@ -178,10 +185,14 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
         @Override
         public void interactWith(Connector other, boolean isCellInteraction) {
-            if (isKeyCollected) {
+            if (other.getState() == CLOSED || (other.getState() == LOCKED && isKeyCollected)) {
                 other.setState(OPEN);
+                // implementation tres douteuse
+                interactionConnector = other;
             }
-            
+            if(isCellInteraction){
+                interactionWithConnector = true;
+            }
         }
 
         @Override

@@ -16,14 +16,18 @@ import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
 
+import static ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room.Level0Connectors.W;
+
 
 public class ICRogue extends AreaGame {
 
     public final static float CAMERA_SCALE_FACTOR = 13.f;
 
     private ICRoguePlayer player;
-    private final String[] areas = {"icrogue/Level0Room"};
-    private int areaIndex;
+
+    public final static DiscreteCoordinates spawnPosition = new DiscreteCoordinates(2,2);
+//    private final String[] areas = {"icrogue/Level0Room"};
+//    private int areaIndex;
     /**
      * Add all the areas
      */
@@ -34,34 +38,23 @@ public class ICRogue extends AreaGame {
     private Level0 level0;
 
     private void initLevel(){
-
         DiscreteCoordinates startingCoords = new DiscreteCoordinates(2,2);
-        level0 = new Level0(4, 2, new DiscreteCoordinates(0,0));
+        level0 = new Level0(4, 2, startingCoords);
         // selon les instruction de la prof
         // une fonction qui demande a level : ajoute moi les aires de tes connecteurs.
         level0.addRooms(this);
         currentRoom = (Level0Room) level0.getRoom(new DiscreteCoordinates(0,0));
         player = new ICRoguePlayer(currentRoom, Orientation.UP, startingCoords, getTitle());
         setCurrentArea(currentRoom.getTitle(), false);
-//        Level0Room startRoom = (Level0Room)setCurrentArea(currentRoom.getTitle(), false);
         setCurrentArea();
         currentRoom.registerActor(player);
-
-
-
     }
 
-//    protected void switchRoom() {
-//
-//        player.leaveArea();
-//
-//        areaIndex = (areaIndex==0) ? 1 : 0;
-//
-//        ICRogueRoom currentArea = (ICRogueRoom)setCurrentArea(areas[areaIndex], false);
-//        player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
-//
-//
-//    }
+    protected void switchRoom() {
+        player.leaveArea();
+        ICRogueRoom nextRoom = (ICRogueRoom)setCurrentArea(player.getInteractionConnector().getDestination(), false);
+        player.enterArea(nextRoom, spawnPosition);
+    }
 
     @Override
     protected Area setCurrentArea() {
@@ -76,8 +69,6 @@ public class ICRogue extends AreaGame {
 
         if (super.begin(window, fileSystem)) {
             initLevel();
-            areaIndex = 0;
-            initArea(areas[areaIndex]);
             return true;
         }
         return false;
@@ -91,6 +82,10 @@ public class ICRogue extends AreaGame {
 
         Keyboard keyboard = getCurrentArea().getKeyboard();
         resetIfPressed(keyboard.get(Keyboard.R));
+        if(player.isInInteractionWithConnector()) {
+            switchRoom();
+        }
+
 
         super.update(deltaTime);
 
@@ -116,18 +111,6 @@ public class ICRogue extends AreaGame {
     public String getTitle() {
         return "ICRogue";
     }
-
-//    protected void switchArea() {
-//
-//        player.leaveArea();
-//
-//        areaIndex = (areaIndex==0) ? 1 : 0;
-//
-//        ICRogueRoom currentArea = (ICRogueRoom) setCurrentArea(areas[areaIndex], false);
-//        player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
-//
-//        player.strengthen();
-//    }
 
 }
 
