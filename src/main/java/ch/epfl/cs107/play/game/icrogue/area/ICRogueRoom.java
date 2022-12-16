@@ -12,7 +12,6 @@ import ch.epfl.cs107.play.window.Window;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public abstract class ICRogueRoom extends Area {
     final private int WEST_CONNECTOR_NB = 0;
@@ -22,28 +21,24 @@ public abstract class ICRogueRoom extends Area {
     private State state;
     private ICRogueBehavior behavior;
     // TODO: 14.12.22 getRoomCoordinates() ou protected ? 
-    protected DiscreteCoordinates roomCoordinates;
+    final protected DiscreteCoordinates roomCoordinates;
     protected String behaviorName;
 
     protected List<Connector> connectors;
-    protected List<DiscreteCoordinates> connectorsCoordinates;
-    private List<Orientation> orientations;
 
-    private List<DiscreteCoordinates> directionRoomCoordinates;// douteux
 
     public ICRogueRoom(List<DiscreteCoordinates> connectorsCoordinates, List<Orientation> orientations,
-                String behaviorName, DiscreteCoordinates roomCoordinates){
+                String behaviorName, DiscreteCoordinates roomCoordinates, List<DiscreteCoordinates> directionRoomSpawnCoordinates){
         // TODO: 10.12.22 intialization douteuse 
         connectors = new ArrayList<>();
-        this.connectorsCoordinates = connectorsCoordinates;
-        this.orientations = orientations;
+
         this.roomCoordinates = roomCoordinates;
         this.behaviorName = behaviorName;
         this.state = State.INVISIBLE;
 
         for (int i = 0; i < connectorsCoordinates.size(); i++) {
             // TODO: 10.12.22 .opposite() well used ? 
-            connectors.add(new Connector(this, orientations.get(i).opposite(),connectorsCoordinates.get(i), state));
+            connectors.add(new Connector(this, orientations.get(i).opposite(),connectorsCoordinates.get(i), state, directionRoomSpawnCoordinates.get(i)));
         }
     }
 
@@ -67,7 +62,6 @@ public abstract class ICRogueRoom extends Area {
         }
         if(keyboard.get(Keyboard.L).isDown()) {
             connectors.get(WEST_CONNECTOR_NB).setState(State.LOCKED);
-            System.out.println("adlajdadf");
         }
         if(keyboard.get(Keyboard.T).isDown()) {
             for (Connector connector: connectors) {

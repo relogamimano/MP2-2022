@@ -3,20 +3,14 @@ package ch.epfl.cs107.play.game.icrogue;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
-import ch.epfl.cs107.play.game.icrogue.area.Level;
 import ch.epfl.cs107.play.game.icrogue.area.level0.Level0;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room.Level0Connectors;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.signal.logic.Or;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
-
-import static ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room.Level0Connectors.W;
 
 
 public class ICRogue extends AreaGame {
@@ -26,22 +20,21 @@ public class ICRogue extends AreaGame {
     private ICRoguePlayer player;
 
 
-    public final static DiscreteCoordinates spawnPosition = new DiscreteCoordinates(2,2);
+    public final static DiscreteCoordinates spawnPosition = new DiscreteCoordinates(2, 2);
 
-    public final static DiscreteCoordinates spawnRoomPosition = new DiscreteCoordinates(1,1);
+    public final static DiscreteCoordinates spawnRoomPosition = new DiscreteCoordinates(1, 1);
 //    private final String[] areas = {"icrogue/Level0Room"};
 //    private int areaIndex;
     /**
      * Add all the areas
      */
-    // TODO: 03.12.22 check if currentRoom and currentArea is well declared ?
     private Level0Room currentRoom;
     private Area currentArea;
 
     private Level0 level0;
 
-    private void initLevel(){
-        DiscreteCoordinates startingCoords = new DiscreteCoordinates(2,2);
+    private void initLevel() {
+        DiscreteCoordinates startingCoords = new DiscreteCoordinates(2, 2);
         level0 = new Level0(4, 2, startingCoords);
         // selon les instruction de la prof
         // une fonction qui demande a level : ajoute moi les aires de tes connecteurs.
@@ -55,9 +48,9 @@ public class ICRogue extends AreaGame {
 
     protected void switchRoom() {
         player.leaveArea();
-        Level0Room nextRoom = (Level0Room)setCurrentArea(player.getInteractionConnector().getDestination(), false);
-//        player.enterArea(nextRoom, Level0Room.Level0Connectors.values()[player.getInteractionConnector().get]);
-        player.enterArea(nextRoom, spawnPosition);
+        Level0Room nextRoom = (Level0Room) setCurrentArea(player.getInteractionConnector().getDestination(), false);
+        player.enterArea(nextRoom, player.getInteractionConnector().getDestinationSpawnCoordinates());
+//        player.enterArea(nextRoom, spawnPosition);
     }
 
     @Override
@@ -81,12 +74,13 @@ public class ICRogue extends AreaGame {
     private void initArea(String areaKey) {
 
     }
+
     @Override
     public void update(float deltaTime) {
 
         Keyboard keyboard = getCurrentArea().getKeyboard();
         resetIfPressed(keyboard.get(Keyboard.R));
-        if(player.isInInteractionWithConnector()) {
+        if (player.isInInteractionWithConnector()) {
             switchRoom();
         }
 
@@ -96,15 +90,12 @@ public class ICRogue extends AreaGame {
     }
 
 
-
-
     private void resetIfPressed(Button b) {
-        if(b.isDown()) {
+        if (b.isDown()) {
             initLevel();
 
         }
     }
-
 
 
     @Override

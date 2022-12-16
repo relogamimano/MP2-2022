@@ -8,11 +8,9 @@ import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.FireBall;
-import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
 import ch.epfl.cs107.play.window.Canvas;
-import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
@@ -23,7 +21,6 @@ import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import static ch.epfl.cs107.play.game.icrogue.actor.Connector.State.*;
 
@@ -37,7 +34,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
 
     private Connector interactionConnector;
 
-    private boolean interactionWithConnector = false;
+    private boolean inInteractionWithConnector = false;
 
     // TODO: 11.12.22 should isInContactInteractio be a method or a variable ?
 //    Level0Room currentRoom;
@@ -85,7 +82,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     }
 
     public boolean isInInteractionWithConnector() {
-        return interactionWithConnector && !isDisplacementOccurs();
+        return inInteractionWithConnector && !isDisplacementOccurs();
     }
 
     /**
@@ -119,7 +116,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
         setOwnerArea(area);
         setCurrentPosition(position.toVector());
         resetMotion();
-        interactionWithConnector = false;
+        inInteractionWithConnector = false;
+//        interactionConnector = null;
     }
 
     @Override
@@ -189,10 +187,11 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
             if (other.getState() == CLOSED || (other.getState() == LOCKED && isKeyCollected)) {
                 other.setState(OPEN);
                 // implementation tres douteuse
-                interactionConnector = other;
+
             }
             if(isCellInteraction){
-                interactionWithConnector = true;
+                inInteractionWithConnector = true;
+                interactionConnector = other;
             }
         }
 

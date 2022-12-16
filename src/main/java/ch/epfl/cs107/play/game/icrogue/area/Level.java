@@ -20,16 +20,12 @@ public class Level {
         map = new ICRogueRoom[width][height];
         this.spawnCoordinates =  spawnCoordinates;
         this.bossPosition = new DiscreteCoordinates(0,0);
-//        generateFixedMap();
     }
 
     public DiscreteCoordinates getSpawnCoordinates() {
         return spawnCoordinates;
     }
 
-
-    // Selon les instructions de la prof :
-    //une fonction qui ajoute les aires au jeu
     public void addRooms(AreaGame areaGame) {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
@@ -40,10 +36,6 @@ public class Level {
             }
         }
     }
-//    public ICRogueRoom[][] getRooms() {
-//        // TODO: 11.12.22 getter intrusif !!!
-//        return map;
-//    }
     public ICRogueRoom getRoom(DiscreteCoordinates coords) {
         return map[coords.x][coords.y];
     }
@@ -61,11 +53,11 @@ public class Level {
         map[coords.x][coords.y].connectors.get(connector.getIndex()).destination = destination;
     }
     protected void setRoomConnector(DiscreteCoordinates coords, String destination, ConnectorInRoom connector) {
-        map[coords.x][coords.y].connectors.get(connector.getIndex()).destination = destination;
+        map[coords.x][coords.y].connectors.get(connector.getIndex()).setDestination(destination);
         map[coords.x][coords.y].connectors.get(connector.getIndex()).setState(Connector.State.CLOSED);
     }
     protected void lockRoomConnector(DiscreteCoordinates coords, ConnectorInRoom connector, int keyId) {
-        map[coords.x][coords.y].connectors.get(connector.getIndex()).KeyID = keyId;
+        map[coords.x][coords.y].connectors.get(connector.getIndex()).setKeyID(keyId);
         map[coords.x][coords.y].connectors.get(connector.getIndex()).setState(Connector.State.LOCKED);
 
     }

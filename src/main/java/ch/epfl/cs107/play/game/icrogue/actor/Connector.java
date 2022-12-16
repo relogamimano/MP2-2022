@@ -9,17 +9,16 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
-import ch.epfl.cs107.play.signal.logic.Or;
 import ch.epfl.cs107.play.window.Canvas;
 
-import java.text.BreakIterator;
 import java.util.List;
 
 public class Connector extends ICRogueActor implements Interactable {
     private Sprite sprite;
 //    private String directionArea;
     public String destination;
-    private Orientation orientation;
+    final private Orientation orientation;
+    final private DiscreteCoordinates destinationSpawnCoordinates;
     public int KeyID;
     private State state;
     public enum State {
@@ -37,10 +36,11 @@ public class Connector extends ICRogueActor implements Interactable {
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
      */
-    public Connector(Area area, Orientation orientation, DiscreteCoordinates position, State state) {
+    public Connector(Area area, Orientation orientation, DiscreteCoordinates position, State state, DiscreteCoordinates destinationSpawnCoordinates) {
         super(area, orientation, position);
         this.state = state;
         this.orientation = orientation;
+        this.destinationSpawnCoordinates = destinationSpawnCoordinates;
 
     }
 
@@ -68,6 +68,13 @@ public class Connector extends ICRogueActor implements Interactable {
         this.state = state;
     }
 
+    public void setKeyID(int keyID) {
+        this.KeyID = keyID;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
     public State getState() {
         return state;
     }
@@ -78,6 +85,10 @@ public class Connector extends ICRogueActor implements Interactable {
     }
 
     public String getDestination() {return destination;}
+
+    public DiscreteCoordinates getDestinationSpawnCoordinates() {
+        return destinationSpawnCoordinates;
+    }
 
     @Override
     public void draw(Canvas canvas) {
@@ -95,19 +106,14 @@ public class Connector extends ICRogueActor implements Interactable {
 
     @Override
     public boolean takeCellSpace() {
-        if (state == State.OPEN) {
-            return false; // traversable
-        }
-        return true;// non traversable
-        // TODO: 11.12.22 or  return !(state ==State.OPEN); ?
+        return state != State.OPEN; // traversable
+// non traversable
+// TODO: 11.12.22 or  return !(state ==State.OPEN); ?
     }
 
     @Override
     public boolean isCellInteractable() {
-        if(state == State.OPEN) {
-            return true;
-        }
-        return false;
+        return state == State.OPEN;
         // TODO: 11.12.22 or  return (state ==State.OPEN); ?
     }
 

@@ -10,16 +10,15 @@ import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
 import ch.epfl.cs107.play.game.icrogue.area.ConnectorInRoom;
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.game.areagame.actor.Sprite;
-import ch.epfl.cs107.play.signal.logic.Or;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Level0Room extends ICRogueRoom {
-    private Item staff;
-    private Item cherry;
-    private Item key;
+
+    private final Item staff;
+    private final Item cherry;
+    private final Item key;
 
     public enum Level0Connectors implements ConnectorInRoom {
         // ordre des attributs: position, destination, orientation
@@ -28,9 +27,16 @@ public class Level0Room extends ICRogueRoom {
         E(new DiscreteCoordinates(9, 4), new DiscreteCoordinates(1, 5), Orientation.RIGHT),
         N(new DiscreteCoordinates(4, 9), new DiscreteCoordinates(5, 1), Orientation.UP);
         private final DiscreteCoordinates position;
-        private final DiscreteCoordinates destination;
+        private final DiscreteCoordinates destinationCoordinates;
         private final Orientation orientation;
 
+        public static List<DiscreteCoordinates> getAllConnectorsDestionation() {
+            List<DiscreteCoordinates>  allConnectorsDestination = new ArrayList<>();
+            for (Level0Connectors level0Connectors : Level0Connectors.values()) {
+                allConnectorsDestination.add(level0Connectors.destinationCoordinates);
+            }
+            return allConnectorsDestination;
+        }
         public static List<Orientation> getAllConnectorsOrientation() {
             List<Orientation>  allConnectorsOrientation = new ArrayList<>();
             for (Level0Connectors level0Connectors : Level0Connectors.values()) {
@@ -48,7 +54,7 @@ public class Level0Room extends ICRogueRoom {
 
         Level0Connectors(DiscreteCoordinates position, DiscreteCoordinates destination, Orientation orientation) {
             this.position = position;
-            this.destination = destination;
+            this.destinationCoordinates = destination;
             this.orientation = orientation;
 
         }
@@ -66,7 +72,7 @@ public class Level0Room extends ICRogueRoom {
         // TODO: 02.12.22 Should i add a constant behaviorName ?
         // private String behaviorName = "icroque/Level0Room"
 
-        super(Level0Connectors.getAllConnectorsPosition(), Level0Connectors.getAllConnectorsOrientation(),"icrogue/Level0Room", roomCoordinates);
+        super(Level0Connectors.getAllConnectorsPosition(), Level0Connectors.getAllConnectorsOrientation(),"icrogue/Level0Room", roomCoordinates, Level0Connectors.getAllConnectorsDestionation());
         key = new Key(this, new DiscreteCoordinates(4, 6), 22);
         staff = new Staff(this, new DiscreteCoordinates(4, 3));
         cherry = new Cherry(this, new DiscreteCoordinates(6, 3));
@@ -84,6 +90,7 @@ public class Level0Room extends ICRogueRoom {
         for (Connector connector: connectors) {
             registerActor(connector);
         }
+
 
     }
 
