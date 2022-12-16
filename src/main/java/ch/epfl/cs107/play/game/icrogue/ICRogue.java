@@ -25,7 +25,10 @@ public class ICRogue extends AreaGame {
 
     private ICRoguePlayer player;
 
+
     public final static DiscreteCoordinates spawnPosition = new DiscreteCoordinates(2,2);
+
+    public final static DiscreteCoordinates spawnRoomPosition = new DiscreteCoordinates(1,1);
 //    private final String[] areas = {"icrogue/Level0Room"};
 //    private int areaIndex;
     /**
@@ -43,7 +46,7 @@ public class ICRogue extends AreaGame {
         // selon les instruction de la prof
         // une fonction qui demande a level : ajoute moi les aires de tes connecteurs.
         level0.addRooms(this);
-        currentRoom = (Level0Room) level0.getRoom(new DiscreteCoordinates(0,0));
+        currentRoom = (Level0Room) level0.getRoom(spawnRoomPosition);
         player = new ICRoguePlayer(currentRoom, Orientation.UP, startingCoords, getTitle());
         setCurrentArea(currentRoom.getTitle(), false);
         setCurrentArea();
@@ -52,7 +55,8 @@ public class ICRogue extends AreaGame {
 
     protected void switchRoom() {
         player.leaveArea();
-        ICRogueRoom nextRoom = (ICRogueRoom)setCurrentArea(player.getInteractionConnector().getDestination(), false);
+        Level0Room nextRoom = (Level0Room)setCurrentArea(player.getInteractionConnector().getDestination(), false);
+//        player.enterArea(nextRoom, Level0Room.Level0Connectors.values()[player.getInteractionConnector().get]);
         player.enterArea(nextRoom, spawnPosition);
     }
 

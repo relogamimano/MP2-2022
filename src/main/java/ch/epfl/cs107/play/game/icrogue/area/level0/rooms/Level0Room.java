@@ -60,6 +60,7 @@ public class Level0Room extends ICRogueRoom {
         public DiscreteCoordinates getDestination() {
             return this.getDestination();
         }
+
     }
     public Level0Room(DiscreteCoordinates roomCoordinates) {
         // TODO: 02.12.22 Should i add a constant behaviorName ?

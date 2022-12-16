@@ -21,6 +21,7 @@ public abstract class ICRogueRoom extends Area {
     final private int NORTH_CONNECTOR_NB = 3;
     private State state;
     private ICRogueBehavior behavior;
+    // TODO: 14.12.22 getRoomCoordinates() ou protected ? 
     protected DiscreteCoordinates roomCoordinates;
     protected String behaviorName;
 

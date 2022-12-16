@@ -79,6 +79,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     }
 
 
+    // TODO: 14.12.22 Connector intrusif ?
     public Connector getInteractionConnector() {
         return interactionConnector;
     }
