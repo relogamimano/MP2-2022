@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.icrogue;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.icrogue.area.Level;
 import ch.epfl.cs107.play.game.icrogue.area.level0.Level0;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import ch.epfl.cs107.play.io.FileSystem;
@@ -32,14 +33,16 @@ public class ICRogue extends AreaGame {
     private Area currentArea;
 
     private Level0 level0;
+    private Level level;
 
     private void initLevel() {
         DiscreteCoordinates startingCoords = new DiscreteCoordinates(2, 2);
         level0 = new Level0(4, 2, startingCoords);
-        // selon les instruction de la prof
-        // une fonction qui demande a level : ajoute moi les aires de tes connecteurs.
         level0.addRooms(this);
         currentRoom = (Level0Room) level0.getRoom(spawnRoomPosition);
+//        level = new Level(true, startingCoords, new int[]{1,2,3}, 4, 2);
+//        level.addRooms(this);
+//        currentRoom = (Level0Room) level.getRoom(spawnRoomPosition);
         player = new ICRoguePlayer(currentRoom, Orientation.UP, startingCoords, getTitle());
         setCurrentArea(currentRoom.getTitle(), false);
         setCurrentArea();
@@ -50,7 +53,11 @@ public class ICRogue extends AreaGame {
         player.leaveArea();
         Level0Room nextRoom = (Level0Room) setCurrentArea(player.getInteractionConnector().getDestination(), false);
         player.enterArea(nextRoom, player.getInteractionConnector().getDestinationSpawnCoordinates());
-//        player.enterArea(nextRoom, spawnPosition);
+    }
+
+    private void generateRandomMap() {
+        //placement des salles
+        //generation des salles
     }
 
     @Override
@@ -62,17 +69,11 @@ public class ICRogue extends AreaGame {
 
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
-
-
         if (super.begin(window, fileSystem)) {
             initLevel();
             return true;
         }
         return false;
-    }
-
-    private void initArea(String areaKey) {
-
     }
 
     @Override

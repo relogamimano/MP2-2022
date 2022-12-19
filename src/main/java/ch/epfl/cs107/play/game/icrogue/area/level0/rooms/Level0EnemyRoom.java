@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.icrogue.area.level0.rooms;
 
+import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icrogue.actor.enemy.Enemy;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
@@ -10,11 +11,13 @@ public class Level0EnemyRoom extends Level0Room {
 
     final private List<Enemy> activeEnemies;
 
-    public Level0EnemyRoom(DiscreteCoordinates roomCoordinates, ArrayList<Enemy> activeEnemies) {
+    public Level0EnemyRoom(DiscreteCoordinates roomCoordinates) {
         super(roomCoordinates);
-        this.activeEnemies = activeEnemies;
-
+        activeEnemies = new ArrayList<>();
     }
+
+
+
     protected void addActiveEneny(Enemy activeEnemy) {
         activeEnemies.add(activeEnemy);
     }

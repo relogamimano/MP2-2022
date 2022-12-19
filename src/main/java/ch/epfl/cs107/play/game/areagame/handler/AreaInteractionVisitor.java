@@ -15,4 +15,5 @@ public interface AreaInteractionVisitor {
     default void interactWith(Interactable other, boolean isCellInteraction){
         System.out.println("Specific Interaction is not yet implemented or you simply forget a cast");
     }
+
 }

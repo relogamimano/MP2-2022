@@ -18,6 +18,11 @@ public abstract class ICRogueRoom extends Area {
     final private int SOUTH_CONNECTOR_NB = 1;
     final private int EAST_CONNECTOR_NB = 2;
     final private int NORTH_CONNECTOR_NB = 3;
+
+    public enum RoomType {
+        TurretRoom, StaffRoom, Boss_key, Spawn, Normal;
+    }
+
     private State state;
     private ICRogueBehavior behavior;
     // TODO: 14.12.22 getRoomCoordinates() ou protected ? 

@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 
 abstract public class Item extends CollectableAreaEntity implements Interactable {
-
     Sprite sprite;
     public Item(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
@@ -28,16 +27,11 @@ abstract public class Item extends CollectableAreaEntity implements Interactable
         }
     }
 
+
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
-
-//    @Override
-//    public boolean takeCellSpace() {
-//        //traversable
-//        return false;
-//    }
 
 
     @Override

@@ -24,7 +24,7 @@ import java.util.List;
 
 import static ch.epfl.cs107.play.game.icrogue.actor.Connector.State.*;
 
-public class ICRoguePlayer extends ICRogueActor implements Interactor {
+public class ICRoguePlayer extends ICRogueActor implements Interactor, Interactable {
     private final Sprite downSprite;
     private final Sprite rightSprite;
     private final Sprite upSprite;
@@ -123,19 +123,11 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor {
     @Override
     // TODO: 06.12.22 verifier switch
     public void draw(Canvas canvas) {
-        switch (getOrientation()){
-            case UP:
-                upSprite.draw(canvas);
-                break;
-            case DOWN:
-                downSprite.draw(canvas);
-                break;
-            case RIGHT:
-                rightSprite.draw(canvas);
-                break;
-            case LEFT:
-                leftSprite.draw(canvas);
-                break;
+        switch (getOrientation()) {
+            case UP -> upSprite.draw(canvas);
+            case DOWN -> downSprite.draw(canvas);
+            case RIGHT -> rightSprite.draw(canvas);
+            case LEFT -> leftSprite.draw(canvas);
         }
     }
 
