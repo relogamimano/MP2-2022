@@ -63,7 +63,6 @@ public class Level {
             generateRandomMap(roomsDistribution);
         }
         generateRandomMap(roomsDistribution);
-        System.out.println("jaime les zizi");
     }
 
     private void generateRandomMap(int[] roomsDistribution) {
