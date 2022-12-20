@@ -1,17 +1,18 @@
 package ch.epfl.cs107.play.game.icrogue.area;
 
+import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.icrogue.RandomHelper;
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+
+import java.util.*;
 import java.util.stream.IntStream;
 
 
 public class Level {
+
+    private final static int POTENTIAL_NEIGBORS = 4;
     private ICRogueRoom[][] map;
     private DiscreteCoordinates startPosition;
     private DiscreteCoordinates bossPosition;
@@ -19,13 +20,15 @@ public class Level {
     private int nbRooms;
     // TODO: 18.12.22 initialisation de random utile ?
     final Random random = new Random();
-
+    private ArrayList<DiscreteCoordinates> placedRooms = new ArrayList<>();
+    private ArrayList<DiscreteCoordinates> exploredRooms = new ArrayList<>();
     protected enum MapState {
         NULL(0), // Empty space
         PLACED(1), // The room has been placed but not yet explored by the room placement algorithm
         EXPLORED(2), // The room has been placed and explored by the algorithm
         BOSS_ROOM(3), // The room is a boss room
         CREATED(4); // The room has been instantiated in the room map
+
         static public MapState intToMapState(int i) {
             assert (i >= 0 && i <= 4);
             return switch (i) {
@@ -37,7 +40,9 @@ public class Level {
                 default -> MapState.NULL;
             };
         }
+
         private final int i;
+
         MapState(int i) {
             this.i = i;
         }
@@ -48,58 +53,59 @@ public class Level {
         }
     }
 
-    public Level(boolean randomMap , DiscreteCoordinates startPosition , int[] roomsDistribution , int width , int height) {
+    public Level(boolean randomMap, DiscreteCoordinates startPosition, int[] roomsDistribution, int width, int height) {
         nbRooms = IntStream.of(roomsDistribution).sum();
-        if(!randomMap) {
+        if (!randomMap) {
             map = new ICRogueRoom[width][height];
-            this.startPosition =  startPosition;
-            this.bossPosition = new DiscreteCoordinates(0,0);
+            this.startPosition = startPosition;
+            this.bossPosition = new DiscreteCoordinates(0, 0);
         } else {
-            generateRandomMap();
+            generateRandomMap(roomsDistribution);
         }
-//        generateRandomMap();
+        generateRandomMap(roomsDistribution);
     }
 
-    private void generateRandomMap() {
+    private void generateRandomMap(int[] roomsDistribution) {
         map = new ICRogueRoom[nbRooms][nbRooms];
-        generateRandomRoomPlacement();
+        MapState[][] mapStates = generateRandomRoomPlacement();
+        for (int i = 0; i < roomsDistribution.length; i++) {
+            int k = roomsDistribution[i];
+//            final List<MapState> randomOrder = RandomHelper.chooseKInList(k, mapStates);
+        }
+
 
     }
-
 
     protected MapState[][] generateRandomRoomPlacement() {
         MapState[][] mapStates = new MapState[nbRooms][nbRooms];
-        for (int i = 0; i < mapStates.length; i++) {
-            for (int j = 0; j < mapStates[i].length; j++) {
-                mapStates[i][j] = MapState.NULL;
-            }
+        for (MapState[] mapState : mapStates) {
+            Arrays.fill(mapState, MapState.NULL);
         }
-        mapStates[(int)(nbRooms/2)][(int)(nbRooms/2)] = MapState.PLACED;
+        mapStates[(int) (nbRooms / 2)][(int) (nbRooms / 2)] = MapState.PLACED;
         int roomsToPlace = nbRooms - 1;
 
-        for (int i = 1; i < mapStates.length-1; i++) {
-            for (int j = 1; j < mapStates[i].length-1; j++) {
-                if(mapStates[i][j] == MapState.PLACED && mapStates[i][j] != MapState.EXPLORED) {
-                    int freeSpots = 0;
-                    int[] neighbors = new int[4];
-                    for (int k = 0; k < 4; k++) {
-                        int x = i - (int) Math.sin((Math.PI*k)/2);
-                        int y = j - (int) Math.cos((Math.PI*k)/2);
-                        MapState neighbor = mapStates[x][y];
-                        if (neighbor == MapState.NULL) {
-                            freeSpots++;
-                            neighbors[k] = k;
+        for (int i = 1; i < mapStates.length - 1; i++) {
+            for (int j = 1; j < mapStates[i].length - 1; j++) {
+                if (mapStates[i][j] == MapState.PLACED && mapStates[i][j] != MapState.EXPLORED) {
+                    ArrayList<Integer> freeSpotsList = new ArrayList<>();
+                    for (int k = 0; k < POTENTIAL_NEIGBORS; k++) {
+                        int x = i - (int) Math.sin((Math.PI * k) / 2);
+                        int y = j - (int) Math.cos((Math.PI * k) / 2);
+                        if (mapStates[x][y] == MapState.NULL) {
+                            freeSpotsList.add(k);
                         }
                     }
-
-
-                    int max = Math.min(roomsToPlace, freeSpots);
-                    final int randomNumber = random.nextInt(0 , max);// TODO: 18.12.22 RandomHelper.roomGenerator.nextInt(borneMin , borneMax)
-                    final List<Integer> randomOrder = RandomHelper.chooseKInList(randomNumber, List.of(0,1,2,3));
-                    for (int k = 0; k < randomOrder.size(); k++) {
-//                        neighbors[randomOrder.get(k)] = MapState.PLACED;
+                    int max = Math.min(roomsToPlace, freeSpotsList.size());
+                    final int randomNumber = random.nextInt(0, max);// TODO: 18.12.22 RandomHelper.roomGenerator.nextInt(borneMin , borneMax)
+                    final List<Integer> randomOrder = RandomHelper.chooseKInList(randomNumber, freeSpotsList);
+                    for (Integer integer : randomOrder) {
+                        int x = i - (int) Math.sin((Math.PI * integer) / 2);
+                        int y = j - (int) Math.cos((Math.PI * integer) / 2);
+                        mapStates[x][y] = MapState.PLACED;
+                        placedRooms.add(new DiscreteCoordinates(x,y));
                     }
                     mapStates[i][j] = MapState.EXPLORED;
+                    exploredRooms.add(new DiscreteCoordinates(i, j));
                 }
             }
         }
@@ -108,7 +114,8 @@ public class Level {
         return mapStates;
     }
 
-    private void printMap(MapState [][] map) {
+
+    private void printMap(MapState[][] map) {
         System.out.println("Generated map:");
         System.out.print("  | ");
         for (int j = 0; j < map[0].length; j++) {
@@ -133,13 +140,14 @@ public class Level {
     public void addRooms(AreaGame areaGame) {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
-                if(map[i][j] != null) {
+                if (map[i][j] != null) {
                     areaGame.addArea(map[i][j]);
                 }
 
             }
         }
     }
+
     public ICRogueRoom getRoom(DiscreteCoordinates coords) {
         return map[coords.x][coords.y];
     }
@@ -149,22 +157,25 @@ public class Level {
     }
 
 
-
     protected void setRoom(DiscreteCoordinates coords, ICRogueRoom room) {
         map[coords.x][coords.y] = room;
     }
+
     protected void setRoomConnectorDestination(DiscreteCoordinates coords, String destination, ConnectorInRoom connector) {
         map[coords.x][coords.y].connectors.get(connector.getIndex()).destination = destination;
     }
+
     protected void setRoomConnector(DiscreteCoordinates coords, String destination, ConnectorInRoom connector) {
         map[coords.x][coords.y].connectors.get(connector.getIndex()).setDestination(destination);
         map[coords.x][coords.y].connectors.get(connector.getIndex()).setState(Connector.State.CLOSED);
     }
+
     protected void lockRoomConnector(DiscreteCoordinates coords, ConnectorInRoom connector, int keyId) {
         map[coords.x][coords.y].connectors.get(connector.getIndex()).setKeyID(keyId);
         map[coords.x][coords.y].connectors.get(connector.getIndex()).setState(Connector.State.LOCKED);
 
     }
+
     protected void setCoordinatesToStarterRoomTitle(DiscreteCoordinates coordinates) {
         startingRoomTitle = "icrogue/level0" + coordinates.x + coordinates.y;
 

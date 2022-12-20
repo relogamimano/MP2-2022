@@ -56,17 +56,16 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor, Interacta
     }
 
 
-
     @Override
     public void update(float deltaTime) {
-        Keyboard keyboard= getOwnerArea().getKeyboard();
+        Keyboard keyboard = getOwnerArea().getKeyboard();
 
         moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
         // TODO: 09.12.22 whould i create a methode throwFireBallIfPressed ? 
-        if(keyboard.get(Keyboard.X).isDown() && isStaffCollected) {
+        if (keyboard.get(Keyboard.X).isDown() && isStaffCollected) {
             FireBall fireBall = new FireBall(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates());
             fireBall.enterArea(getOwnerArea(), getCurrentMainCellCoordinates());
         }
@@ -87,11 +86,12 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor, Interacta
 
     /**
      * Orientate and Move this player in the given orientation if the given button is down
+     *
      * @param orientation (Orientation): given orientation, not null
-     * @param b (Button): button corresponding to the given orientation, not null
+     * @param b           (Button): button corresponding to the given orientation, not null
      */
-    private void moveIfPressed(Orientation orientation, Button b){
-        if(b.isDown()) {
+    private void moveIfPressed(Orientation orientation, Button b) {
+        if (b.isDown()) {
             if (!isDisplacementOccurs()) {
                 orientate(orientation);
                 move(MOVE_DURATION);
@@ -102,16 +102,15 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor, Interacta
     /**
      * Leave an area by unregister this player
      */
-    public void leaveArea(){
+    public void leaveArea() {
         getOwnerArea().unregisterActor(this);
     }
 
     /**
-     *
-     * @param area (Area): initial area, not null
+     * @param area     (Area): initial area, not null
      * @param position (DiscreteCoordinates): initial position, not null
      */
-    public void enterArea(Area area, DiscreteCoordinates position){
+    public void enterArea(Area area, DiscreteCoordinates position) {
         area.registerActor(this);
         setOwnerArea(area);
         setCurrentPosition(position.toVector());
@@ -138,8 +137,9 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor, Interacta
     }
 
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return Collections.singletonList (getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+        return Collections.singletonList(getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
     }
+
     public boolean wantsCellInteraction() {
         return true;
     }
@@ -151,24 +151,27 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor, Interacta
     }
 
 
-
-
     @Override
-    public boolean takeCellSpace() {return true;} // non traversable
+    public boolean takeCellSpace() {
+        return true;
+    } // non traversable
+
     @Override
     public boolean isCellInteractable() {
         return true;
     }
+
     @Override
     public boolean isViewInteractable() {
         return true;
     }
+
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICRogueInteractionHandler) v).interactWith(this, isCellInteraction);
     }
 
-    public void interactWith(Interactable other,boolean isCellInteraction) {
+    public void interactWith(Interactable other, boolean isCellInteraction) {
         other.acceptInteraction(icRogueInteractionHandler, isCellInteraction);
     }
 
@@ -181,7 +184,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor, Interacta
                 // implementation tres douteuse
 
             }
-            if(isCellInteraction){
+            if (isCellInteraction) {
                 inInteractionWithConnector = true;
                 interactionConnector = other;
             }
@@ -192,12 +195,14 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor, Interacta
             other.collect();
 
         }
+
         @Override
         public void interactWith(Staff other, boolean isCellInteraction) {
             other.collect();
             isStaffCollected = true;
 
         }
+
         @Override
         public void interactWith(Key other, boolean isCellInteraction) {
             other.collect();
